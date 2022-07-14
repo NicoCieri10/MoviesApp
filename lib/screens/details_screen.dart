@@ -16,8 +16,8 @@ class DetailsScreen extends StatelessWidget {
           SliverList(
             delegate: SliverChildListDelegate([
               _PosterAndTitle(movie),
-              _Overview(),
-              CastingCards(),
+              _Overview(movie),
+              CastingCards(movie.id),
             ]),
           )
         ],
@@ -43,11 +43,16 @@ class _CustomAppBar extends StatelessWidget {
         title: Container(
           width: double.infinity,
           alignment: Alignment.bottomCenter,
-          padding: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
           color: Colors.black12,
           child: Text(
             movie.title,
-            style: const TextStyle(fontSize: 16),
+            style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                backgroundColor: Colors.black45),
+            textAlign: TextAlign.center,
           ),
         ),
         background: FadeInImage(
@@ -62,7 +67,6 @@ class _CustomAppBar extends StatelessWidget {
 
 class _PosterAndTitle extends StatelessWidget {
   final Movie movie;
-
   const _PosterAndTitle(this.movie);
 
   @override
@@ -80,7 +84,6 @@ class _PosterAndTitle extends StatelessWidget {
             child: FadeInImage(
               placeholder: const AssetImage('assets/no-image.jpg'),
               image: NetworkImage(movie.fullPosterImg),
-              // TODO: fix fade in image size
               height: 150,
               width: MediaQuery.of(context).size.width * 0.25,
               fit: BoxFit.cover,
@@ -100,12 +103,12 @@ class _PosterAndTitle extends StatelessWidget {
                 Text(movie.originalTitle,
                     style: textTheme.subtitle1,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1),
+                    maxLines: 2),
                 Row(
                   children: [
                     const Icon(Icons.star, size: 17, color: Colors.yellow),
                     const SizedBox(width: 5),
-                    Text(movie.voteAverage.toString(),
+                    Text('${movie.voteAverage}',
                         style: textTheme.caption,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1),
@@ -121,12 +124,15 @@ class _PosterAndTitle extends StatelessWidget {
 }
 
 class _Overview extends StatelessWidget {
+  final Movie movie;
+  const _Overview(this.movie);
+
   @override
   Widget build(BuildContext context) {
     final Movie movie = ModalRoute.of(context)!.settings.arguments as Movie;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Text(
         movie.overview,
         textAlign: TextAlign.justify,
